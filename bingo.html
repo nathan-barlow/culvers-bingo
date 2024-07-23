@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Bingo Caller</title>
+      <style>
+         body {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+         }
+         .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 20px;
+         }
+         h1 {
+            font-size: 20rem;
+            margin: 0;
+         }
+         button {
+            outline: none;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 1rem;
+         }
+         button:last-child {
+            background-color: white;
+            color: black;
+         }
+         button:last-child {
+            background-color: #3d699e;
+            color: white;
+         }
+         #history {
+            margin-top: 20px;
+            max-width: 90%;
+            text-align: center;
+            word-wrap: break-word;
+         }
+      </style>
+   </head>
+   <body>
+      <h1 id="number">Ready</h1>
+      <span class="buttons">
+         <button onclick="resetGame()">Reset</button>
+         <button onclick="newNumber()">Next Number</button>
+      </span>
+      <div id="history"></div>
+   </body>
+   <script>
+      const maxNumber = 100;
+
+      // Initialize usedNumbers from localStorage or as an empty array
+      let usedNumbers = JSON.parse(localStorage.getItem("usedNumbers")) || [];
+
+      // Display the initial history
+      displayHistory();
+
+      function newNumber() {
+         if (usedNumbers.length >= maxNumber) {
+            document.getElementById("number").textContent =
+               "All numbers called!";
+            return;
+         }
+
+         let newNum;
+         do {
+            newNum = Math.floor(Math.random() * maxNumber) + 1;
+         } while (usedNumbers.includes(newNum));
+
+         usedNumbers.push(newNum);
+         localStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
+
+         document.getElementById("number").textContent = newNum;
+         displayHistory();
+      }
+
+      function resetGame() {
+         usedNumbers = [];
+         localStorage.removeItem("usedNumbers");
+         document.getElementById("number").textContent = "Ready";
+         displayHistory();
+      }
+
+      function displayHistory() {
+         const historyDiv = document.getElementById("history");
+         historyDiv.innerHTML = `<strong>History:</strong> ${usedNumbers.join(
+            ", "
+         )}`;
+      }
+   </script>
+</html>
